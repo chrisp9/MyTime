@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using MyTime.Common;
 
 namespace MyTime.Collector
@@ -21,15 +18,20 @@ namespace MyTime.Collector
 
       public void Run()
       {
-         _windowProcedureDelegate = new NativeMethods.WinEventDelegate(WinEventProc);
+         _windowProcedureDelegate = WinEventProc;
 
-         IntPtr m_hhook = _nativeMethods.SetWinEventHook(
+         var hooked = _nativeMethods.SetWinEventHook(
             NativeMethods.EVENT_SYSTEM_FOREGROUND, 
             NativeMethods.EVENT_SYSTEM_FOREGROUND, 
             IntPtr.Zero, 
-            _windowProcedureDelegate, 0, 0, NativeMethods.WINEVENT_OUTOFCONTEXT);
+            _windowProcedureDelegate, 0, 0, 
+            NativeMethods.WINEVENT_OUTOFCONTEXT);
       }
 
+      // TODO: Doesn't detect Lock screen. Need SystemEvents.SessionSwitch for this.
+      // TODO: Probably should detect when the Active Desktop is changed (e.g. CTRL ALT DEL)
+      // TODO: Need to consider when we switch back to the CURRENT desktop. Also what about Windows 10?
+      // TODO: For Windows 10 probably need to install the hook for every desktop (will Antivirus stop this?)
       public void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
       {
          Console.WriteLine(GetActiveWindowTitle() + "\r\n");
@@ -37,16 +39,17 @@ namespace MyTime.Collector
 
       private string GetActiveWindowTitle()
       {
-         const int nChars = 256;
-         IntPtr handle = IntPtr.Zero;
-         StringBuilder Buff = new StringBuilder(nChars);
-         handle = _nativeMethods.GetForegroundWindow();
+         const int maxChars = 256;
 
-         if (_nativeMethods.GetWindowText(handle, Buff, nChars) > 0)
-         {
-            return Buff.ToString();
-         }
-         return null;
+         // TODO: Use this to get owner process, then main window of this process.
+         IntPtr windowHandle = IntPtr.Zero;
+
+         StringBuilder buffer = new StringBuilder(maxChars);
+         windowHandle = _nativeMethods.GetForegroundWindow();
+
+         return _nativeMethods.GetWindowText(windowHandle, buffer, maxChars) > 0 
+            ? buffer.ToString() 
+            : null;
       }
    }
 }
