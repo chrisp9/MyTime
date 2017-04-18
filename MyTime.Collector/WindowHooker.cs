@@ -42,7 +42,7 @@ namespace MyTime.Collector
          const int maxChars = 256;
 
          // TODO: Use this to get owner process, then main window of this process.
-         IntPtr windowHandle = IntPtr.Zero;
+         var windowHandle = IntPtr.Zero;
 
          StringBuilder buffer = new StringBuilder(maxChars);
          windowHandle = _nativeMethods.GetForegroundWindow();
