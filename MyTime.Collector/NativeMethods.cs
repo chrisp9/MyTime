@@ -36,5 +36,8 @@ namespace MyTime.Collector
          uint idProcess,
          uint idThread, 
          uint dwFlags);
+
+      [DllImport("user32.dll", SetLastError = true)]
+      internal static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
    }
 }

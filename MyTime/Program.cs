@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Autofac;
 using MyTime.Collector;
 using MyTime.Common;
+using ThreadingLib;
 
 namespace MyTime
 {
@@ -17,6 +18,8 @@ namespace MyTime
          var cb = new ContainerBuilder();
          cb.RegisterType<NativeMethodWrapper>().AsImplementedInterfaces().SingleInstance();
          cb.RegisterType<WindowHooker>().AsImplementedInterfaces().SingleInstance();
+         cb.RegisterType<ProcessInformationCollector>().AsImplementedInterfaces().SingleInstance();
+         cb.RegisterType<ActionQueue>().AsImplementedInterfaces().SingleInstance();
 
          var container = cb.Build();
 
@@ -24,6 +27,9 @@ namespace MyTime
          {
             service.Run();
          }
+
+         container.Resolve<IProcessInformationSource>().Subscribe(container.Resolve<IProcessInformationListener>());
+
          Application.Run();
 
          Console.ReadLine();

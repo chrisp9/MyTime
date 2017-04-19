@@ -16,6 +16,8 @@ namespace MyTime.Collector
          uint idProcess,
          uint idThread,
          uint dwFlags);
+
+      uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
    }
 
    public class NativeMethodWrapper : INativeMethodWrapper
@@ -49,5 +51,9 @@ namespace MyTime.Collector
             dwFlags);
       }
 
+      public uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId)
+      {
+         return NativeMethods.GetWindowThreadProcessId(hWnd, out lpdwProcessId);
+      }
    }
 }
