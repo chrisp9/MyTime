@@ -16,7 +16,7 @@ namespace MyTime.Collector
    {
       public void OnProcessInformation(ProcessInformation processInfo)
       {
-         Console.WriteLine(processInfo.FriendlyName);
+         Console.WriteLine(processInfo.ProcessDescription);
       }
    }
 

@@ -40,6 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CurrentTime.cs" />
+    <Compile Include="DictionaryExtensions.cs" />
+    <Compile Include="IProcessInformation.cs" />
     <Compile Include="IRunnable.cs" />
     <Compile Include="ProcessInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
